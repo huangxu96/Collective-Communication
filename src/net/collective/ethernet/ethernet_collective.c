@@ -79,8 +79,6 @@ struct nk_net_ethernet_collective {
     ethernet_mac_addr_t macs[0];    // members of the collective - extended as per number requested
 };
 
-
-
 static inline void encode_packet(nk_ethernet_packet_t *p, ethernet_mac_addr_t dest, ethernet_mac_addr_t src, uint16_t basetype, uint16_t subtype, void *data, uint16_t len)
 {
     memcpy(p->header.dst,dest,6);
@@ -125,6 +123,7 @@ static inline int decode_packet(nk_ethernet_packet_t *p, ethernet_mac_addr_t des
     }
     
     memcpy(data, p->data+4, *len);
+    p->len = *len + 14 + 2 +2;
 
     return 0;
 }
@@ -154,6 +153,7 @@ static inline int decode_packet_in_place(nk_ethernet_packet_t *p, ethernet_mac_a
     memcpy(&t,p->data+2,2);
     *len = t;
     *data = p->data+4;
+    p->len = *len + 14 + 2 + 2;
 
     return 0;
 }
@@ -404,37 +404,34 @@ static void ring_recv_callback(nk_net_dev_status_t status,
     }
     
     memcpy(col->token,token,token_len);
-    
+     
     if (!col->initiator) {
 	// we will send the same packet to our neighbor;
 
 	memcpy(packet->header.dst, col->macs[(col->my_node + 1) % col->num_nodes], 6);
 
-	memcpy(packet->header.src,col->macs[col->my_node], 6);
+	memcpy(packet->header.src, col->macs[col->my_node], 6);
 
 	// all else is the same
-
 	if (nk_net_ethernet_agent_device_send_packet(col->netdev,
 						     packet,
 						     NK_DEV_REQ_NONBLOCKING,
 						     0, 0)) {
 	    ERROR("Cannot launch packet mid ring\n");
-	    return;
+        return;
 	}
     }
-
-    // now we are done
-
-    col->ring_state = RING_IDLE;
+   
+    DEBUG("finish recv_callback\n");
+    col->ring_state = RING_IDLE;    
     col->current_mode = COLLECTIVE_IDLE;
 }
-
 
 #define REGEN_DELAY_NS 10000000
 // circulate a token among the nodes in the barrier
 // for two nodes, this is a ping-pong
 int nk_net_ethernet_collective_ring(struct nk_net_ethernet_collective *col, void *token, uint64_t token_len, int initiate)
-{
+{ 
     if (token_len>NET_ETHERNET_COLLECTIVE_MAX_TOKEN_LEN) {
 	DEBUG("token length unsupported\n");
 	return -1;
@@ -497,10 +494,10 @@ int nk_net_ethernet_collective_ring(struct nk_net_ethernet_collective *col, void
     
     // wait for completion
     while (__sync_fetch_and_or(&col->current_mode,0)==COLLECTIVE_RING) {
-	if ((nk_sched_get_realtime()-start) > REGEN_DELAY_NS) {
-	    // relaunch the packet if we have been waiting too long
-	    goto do_initiate;
-	}
+        if ((nk_sched_get_realtime()-start) > REGEN_DELAY_NS) {
+	        // relaunch the packet if we have been waiting too long
+            goto do_initiate;
+	    }
     }
 
     return 0;

@@ -936,7 +936,9 @@ void nk_thread_queue_sleep_extended(nk_thread_queue_t *wq, int (*cond_check)(voi
 	// it will also reenable preemption on its context switch out
 	// and it will reenable interrupts
 	nk_sched_sleep(&wq->lock);
-	
+    
+    irq_enable_restore(flags);
+
 	THREAD_DEBUG("Thread %lu (%s) has slow wakeup on queue %p\n", t->tid, t->name, (void*)wq);
 
 	// note no spin_unlock here since nk_sched_sleep will have 

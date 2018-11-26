@@ -113,6 +113,10 @@
 #include <net/ethernet/ethernet_arp.h>
 #endif
 
+#ifdef NAUT_CONFIG_NET_COLLECTIVE
+#include <net/collective/ethernet/ethernet_collective.h>
+#endif
+
 #ifdef NAUT_CONFIG_NET_LWIP
 #include <net/lwip/lwip.h>
 #endif
@@ -263,7 +267,6 @@ static int launch_periodic_burner(char *name, uint64_t size_ns, uint32_t tpr, ui
 	return 0;
     }
 }
-
 
 static int handle_cat(char *buf)
 {
@@ -1336,6 +1339,48 @@ static int handle_net(char *buf)
     return 0;
 }
 
+static int handle_col(char *buf)
+{
+    char agentname[100];
+    int num_nodes;
+    int i;
+    int signal;
+
+#ifdef NAUT_CONFIG_NET_COLLECTIVE
+    ethernet_mac_addr_t mac[10];
+    struct nk_net_ethernet_collective *collnet_agent = NULL;
+    
+    if (sscanf(buf, "collnet test %d %d", &num_nodes, &signal)==2) {
+        if (signal != 0)
+            signal = 1;
+        handle_net("net agent create coll-test virtio-net0");
+        handle_net("net agent start coll-test");
+        struct nk_net_ethernet_agent *agent = nk_net_ethernet_agent_find("coll-test");
+        
+        for (i=0; i<num_nodes; i++) {
+            mac[i][0] = 0x52;
+            mac[i][1] = 0x00;
+            mac[i][2] = 0x01;
+            mac[i][3] = 0x02;
+            mac[i][4] = 0x03;
+            mac[i][5] = 0x04 + i;
+        }
+        
+        collnet_agent = nk_net_ethernet_collective_create(agent, 5, num_nodes, mac);
+        if (collnet_agent == NULL) {
+            nk_vc_printf("create collnet agent failed.\n");
+            return 0;
+        }
+        nk_vc_printf("create collnet agent successed.\n");
+        char token[]="test information";
+        nk_net_ethernet_collective_ring(collnet_agent, token, strlen(token), signal);
+        return 0;
+    }
+#endif
+
+    nk_vc_printf("No relevant collective network functionality is configured or bad command\n");
+    return 0;
+}
 
 static int handle_cmd(char *buf, int n)
 {
@@ -1477,6 +1522,10 @@ static int handle_cmd(char *buf, int n)
     return 0;
   }
 
+  if (!strncasecmp(buf,"collnet",7)) {
+    handle_col(buf);
+    return 0;
+  }
 
 #ifdef NAUT_CONFIG_CACHEPART
   if (!strncasecmp(buf,"cachepart",9)) {

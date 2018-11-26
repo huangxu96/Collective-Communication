@@ -55,6 +55,8 @@ int nk_net_ethernet_collective_barrier(struct nk_net_ethernet_collective *col);
 // for two nodes, this is a ping-pong
 int nk_net_ethernet_collective_ring(struct nk_net_ethernet_collective *col, void *token, uint64_t token_len, int initiate);
 
+int nk_net_ethernet_collective_ring_banding(struct nk_net_ethernet_collective *col);
+
 #define NET_ETHERNET_COLLECTIVE_MAX_TOKEN_LEN 512
 
 
