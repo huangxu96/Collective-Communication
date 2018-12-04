@@ -147,6 +147,8 @@ struct burner_args {
 
 #define SWITCH() SET_OUT(~GET_OUT())
 #define LOOP() {SWITCH(); udelay(1000); }
+    
+struct nk_net_ethernet_collective *collnet_agent = NULL;
 
 static void burner(void *in, void **out)
 {
@@ -1339,6 +1341,37 @@ static int handle_net(char *buf)
     return 0;
 }
 
+#ifdef NAUT_CONFIG_NET_COLLECTIVE
+struct nk_net_ethernet_collective* collective_agent_create_for_test(int num_nodes)
+{
+    int i;
+    ethernet_mac_addr_t mac[10];
+    struct nk_net_ethernet_agent *agent = nk_net_ethernet_agent_find("coll-test");
+       
+    if (agent == NULL) {
+        nk_vc_printf("can't find collnet agent.\n");
+        return NULL;
+    }
+
+    for (i=0; i<num_nodes; i++) {
+        mac[i][0] = 0x52;
+        mac[i][1] = 0x00;
+        mac[i][2] = 0x01;
+        mac[i][3] = 0x02;
+        mac[i][4] = 0x03;
+        mac[i][5] = 0x04 + i;
+    }
+        
+    struct nk_net_ethernet_collective *collnet_agent = nk_net_ethernet_collective_create(agent, 5, num_nodes, mac);
+    if (collnet_agent == NULL) {
+        nk_vc_printf("create collnet agent failed.\n");
+        return NULL;
+    } else {
+        return collnet_agent;
+    }
+}
+#endif
+
 static int handle_col(char *buf)
 {
     char agentname[100];
@@ -1346,34 +1379,29 @@ static int handle_col(char *buf)
     int i;
     int signal;
 
-#ifdef NAUT_CONFIG_NET_COLLECTIVE
-    ethernet_mac_addr_t mac[10];
-    struct nk_net_ethernet_collective *collnet_agent = NULL;
-    
-    if (sscanf(buf, "collnet test %d %d", &num_nodes, &signal)==2) {
-        if (signal != 0)
-            signal = 1;
+#ifdef NAUT_CONFIG_NET_COLLECTIVE 
+    if (sscanf(buf, "collnet agent %d", &num_nodes)==1) {
         handle_net("net agent create coll-test virtio-net0");
         handle_net("net agent start coll-test");
-        struct nk_net_ethernet_agent *agent = nk_net_ethernet_agent_find("coll-test");
-        
-        for (i=0; i<num_nodes; i++) {
-            mac[i][0] = 0x52;
-            mac[i][1] = 0x00;
-            mac[i][2] = 0x01;
-            mac[i][3] = 0x02;
-            mac[i][4] = 0x03;
-            mac[i][5] = 0x04 + i;
-        }
-        
-        collnet_agent = nk_net_ethernet_collective_create(agent, 5, num_nodes, mac);
+        collnet_agent = collective_agent_create_for_test(num_nodes);
         if (collnet_agent == NULL) {
-            nk_vc_printf("create collnet agent failed.\n");
             return 0;
+        } else {
+            nk_vc_printf("create collnet agent successed.\n");
         }
-        nk_vc_printf("create collnet agent successed.\n");
+        return 0;
+    }
+
+    if (sscanf(buf, "collnet ring %d", &signal)==1) {
+        if (signal != 0)
+            signal = 1;
         char token[]="test information";
         nk_net_ethernet_collective_ring(collnet_agent, token, strlen(token), signal);
+        return 0;
+    }
+
+    if (strcmp(buf, "collnet barrier")==0) { 
+        nk_net_ethernet_collective_barrier(collnet_agent);
         return 0;
     }
 #endif
