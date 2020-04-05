@@ -1,0 +1,4 @@
+make isoimage && qemu-system-x86_64 -smp 2 -m 2048 -vga std -serial stdio -cdrom
+ nautilus.iso -netdev user,id=net0 -device virtio-net,netdev=net0 -netdev user,i
+d=net1 -device e1000,netdev=net1  -drive if=none,id=hd0,format=raw,file=nautilus
+.iso -device virtio-blk,drive=hd0

@@ -1,0 +1,168 @@
+CPU ? (): dev: devices inited
+CPU ? (): chardev: init
+CPU ? (): blkdev: init
+CPU ? (): netdev: init
+Welcome to                                         
+    _   __               __   _  __                
+   / | / /____ _ __  __ / /_ (_)/ /__  __ _____    
+  /  |/ // __ `// / / // __// // // / / // ___/    
+ / /|  // /_/ // /_/ // /_ / // // /_/ /(__  )     
+/_/ |_/ \__,_/ \__,_/ \__//_//_/ \__,_//____/  
++===============================================+  
+ Kyle C. Hale (c) 2014 | Northwestern University   
++===============================================+  
+
+Detected AuthenticAMD Processor
+BOOTMEM: Setting up boot memory allocator
+BOOTMEM: Memory map[0] - [0x00000000 - 0x0009f000] <usable RAM>
+BOOTMEM: Memory map[1] - [0x000a0000 - 0x000a0000] <reserved>
+BOOTMEM: Memory map[2] - [0x000f0000 - 0x00100000] <reserved>
+BOOTMEM: Memory map[3] - [0x00100000 - 0x7ffe0000] <usable RAM>
+BOOTMEM: Memory map[4] - [0x7ffe0000 - 0x80000000] <reserved>
+BOOTMEM: Memory map[5] - [0xfffc0000 - 0x100000000] <reserved>
+BOOTMEM: Detected 2146.958336 MB of usable System RAM
+CPU ? (): DEBUG: Multiboot info size 392B
+CPU ? (): DEBUG: Cmd line: 
+CPU ? (): DEBUG: Boot loader: GRUB 2.02~beta2-36ubuntu3.22
+CPU ? (): DEBUG: Unhandled tag type (0xa)
+CPU ? (): DEBUG: Multiboot2 memory map detected
+CPU ? (): DEBUG: ELF size=20, num=0, entsize=0, shndx=0, sechdr=0x00317df2
+CPU ? (): DEBUG: Multiboot2 basic meminfo detected
+CPU ? (): DEBUG: Boot device: (biosdev=0xe0,slice=4294967295,part=4294967295)
+CPU ? (): DEBUG: fb addr: 0x000b8000, fb_width: 80, fb_height: 25
+CPU ? (): DEBUG: Old ACPI: rsdp=0x004736f8
+ACPI: Parsing ACPI root table (at 0x000f63f0)
+ACPI: RSDP 00000000000f63f0 00014 (v00 BOCHS )
+ACPI: RSDT 000000007ffe1737 00034 (v01 BOCHS  BXPCRSDT 00000001 BXPC 00000001)
+ACPI: root table checksum pass
+ACPI: FACP 000000007ffe0c14 00074 (v01 BOCHS  BXPCFACP 00000001 BXPC 00000001)
+ACPI: SSDT 000000007ffe0c88 009F7 (v01 BOCHS  BXPCSSDT 00000001 BXPC 00000001)
+ACPI: APIC 000000007ffe167f 00080 (v01 BOCHS  BXPCAPIC 00000001 BXPC 00000001)
+ACPI: HPET 000000007ffe16ff 00038 (v01 BOCHS  BXPCHPET 00000001 BXPC 00000001)
+ACPI: Done parsing ACPI root table
+SMP: Detected 2 CPUs
+NUMA: Parsing ACPI NUMA information...
+NUMA: DONE.
+CPU ? (): WARNING: NUMA: Associate Domains using ADHOC METHOD
+Remapping phys mem [0x00000000 - 0x100000000] with 2MB pages
+CPU ? (): KMEM: Malloc configured to support a maximum of: 0x7ff7f000 bytes of physical memory
+BOOTMEM: Adding boot memory regions to the kernel memory pool:
+BOOTMEM:     [Domain 00 : Region 00] (0.00 MB)
+BOOTMEM:     [Domain 00 : Region 01] (2124.414976 MB)
+BOOTMEM:     =======
+BOOTMEM:     [TOTAL] (2124.414976 MB)
+Disabling legacy 8259 PIC
+Initializing i8254 PIT
+CPU 0 (P 0 "*none*"): dev: Added device with name i8254, type 2, flags 0x0
+CPU 0 (P 0 "*none*"): dev: Added device with name ioapic0, type 1, flags 0x0
+CPU 0 (P 0 "*none*"): timer: Timers inited
+CPU 0 (P 0 "*none*"): APIC: Detected APIC 0x0 at 1000616000 Hz and cycles per us as 2095 (core at 2095000000 Hz) calibration mode=0
+CPU 0 (P 0 "*none*"): APIC: Detected APIC 0x0 CPU cycles per tick as 33 cycles (min was 33)
+CPU 0 (P 0 "*none*"): dev: Added device with name apic0, type 1, flags 0x0
+CPU 0 (P 0 "*none*"): semaphore: inited
+CPU 0 (P 0 "*none*"): msg_queue: inited
+CPU 0 (P 0 "*none*"): ps2: init
+CPU 0 (P 0 "*none*"): ps2: mouse does not exist
+CPU 0 (P 0 "*none*"): dev: Added device with name ps2-keyboard, type 0, flags 0x0
+PCI: Probing PCI bus...
+PCI: 0000:00:00.0 8086:1237 (rev 2)
+PCI: 0000:00:01.0 8086:7000 (rev 0)
+PCI: [0000:01.0] Multifunction Device detected
+PCI: 0000:00:01.1 8086:7010 (rev 0)
+PCI: 0000:00:01.3 8086:7113 (rev 3)
+PCI: 0000:00:02.0 1234:1111 (rev 2)
+PCI: 0000:00:03.0 1af4:1000 (rev 0)
+CPU 0 (P 0 "*none*"): dev: Added device with name pci0, type 3, flags 0x0
+CPU 0 (P 0 "*none*"): dev: Added device with name isa, type 3, flags 0x0
+CPU 0 (P 0 "*none*"): Scheduler: Initializing scheduler on BSP
+CPU 0 (P 1 "*unnamed*"): group_sched: Inited
+BOOTMEM: Reclaiming boot sections and data:
+BOOTMEM:     [Boot alloc. page map] (0.264 MB)
+BOOTMEM:     [Boot page tables and stack]     (0.4096 MB)
+BOOTMEM:     =======
+BOOTMEM:     [TOTAL] (2.109704 MB)
+BOOTMEM:     Boot allocation range: 0x00800000-0x0130a6c0
+CPU 0 (P 1 "*unnamed*"): KMEM:    boot range: 0x00800000-0x0130a6c0   kmem private: 0x00809000-0x0130a6c0
+SMP: Setting up cross-core IPI event queue
+CPU 1 (P 0 "*none*"): mtrr: 82 MTRR mismatches detected with corrections attempted (1 default, 80 fixed, 0 smrr, 1 variable)
+CPU 1 (P 0 "*none*"): dev: Added device with name apic1, type 1, flags 0x0
+MWAIT not supported
+CPU 0 (P 1 "*unnamed*"): dev: Added device with name vga, type 0, flags 0x0
+CPU 0 (P 1 "*unnamed*"): dev: Added device with name serial-boot, type 0, flags 0x0
+CPU 0 (P 1 "*unnamed*"): chardev: register device serial0
+CPU 0 (P 1 "*unnamed*"): dev: Added device with name serial0, type 4, flags 0x0
+CPU 0 (P 1 "*unnamed*"): vc: init
+List of VCs (space to regenerate, plus for new shell)
+
+a : default
+b : system-log
+c : vc-list
+CPU 0 (P 1 "*unnamed*"): vc: List launched
+CPU 0 (P 1 "*unnamed*"): virtio_pci: Found virtio net device: bus=0 dev=3 func=0: pci_intr=0 intr_vec=0 ioport_start=000000000000c000 ioport_end=000000000000c020 mem_start=00000000febd1000 mem_end=00000000febd2000 access_method=IO
+CPU 0 (P 1 "*unnamed*"): netdev: register device virtio-net0
+CPU 0 (P 1 "*unnamed*"): dev: Added device with name virtio-net0, type 6, flags 0x0
+CPU 0 (P 1 "*unnamed*"): e1000_pci: init
+CPU 0 (P 1 "*unnamed*"): ethernet_packet: inited and seeded with 256 packets of size 2048 (low=128, high=512)
+CPU 0 (P 1 "*unnamed*"): ethernet_agent: inited
+CPU 0 (P 1 "*unnamed*"): ethernet_arp: inited
+CPU 0 (P 1 "*unnamed*"): ether_col: inited
+CPU 0 (P 1 "*unnamed*"): fs: inited
+PMC: Initializing PMC subsystem
+CPU 0 (P 1 "*unnamed*"): WARNING : PMC: Insufficient AMD PMC support for perf counter subsystem
+CPU 0 (P 1 "*unnamed*"): WARNING : PMC: Disabling PMC subsystem
+CPU 0 (P 1 "*unnamed*"): Shell root-shell launched on cpu 0 as 00000000001aa000
+Nautilus boot thread yielding (indefinitely)
+***exec: collnet agent 4
+Attempt to create ethernet agent coll-test for device virtio-net0
+agent created
+Started agent coll-test
+CPU 0 (P 4 "root-shell"): netdev: register device coll-test-type0005
+CPU 0 (P 4 "root-shell"): dev: Added device with name coll-test-type0005, type 6, flags 0x0
+I am Node 1 
+create collnet agent successed.
+***exec: collnet barrier
+--------Start barrier test--------- 
+start barrier 0
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: col->num_nodes: 4, col->maxlevel: 0, log2_ceil: 2
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: receive packet on coll-test-type0005 (type=2)
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier time out, resend!
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier time out, resend!
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier time out, resend!
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier time out, resend!
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier time out, resend!
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier time out, resend!
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: Send packet of generation of 1
+CPU 0 (P 4 "root-shell"): DEBUG: ether_col: barrier_send_packet, col->maxlevel=0
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: send packet 000000000142a000 on coll-test-type0005 (len=27, type=1)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Post Send Packet state=00000000001acb00, packet=000000000142a000 callback=(null) context=(null)
+CPU 0 (P 4 "root-shell"): DEBUG: ethernet_agent: Packet launch started

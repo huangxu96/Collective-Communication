@@ -46,6 +46,29 @@ struct nk_net_ethernet_collective *nk_net_ethernet_collective_create(struct nk_n
 								     uint32_t             num_nodes,
 								     ethernet_mac_addr_t  macs[]);
 
+// top level callback
+static void collective_recv_callback(nk_net_dev_status_t status, nk_ethernet_packet_t *packet, void *state);
+static int gather_recv_callback(nk_net_dev_status_t status, nk_ethernet_packet_t *packet, void *state);
+static int scatter_recv_callback(nk_net_dev_status_t status, nk_ethernet_packet_t *packet, void *state);
+static int bcast_recv_callback(nk_net_dev_status_t status, nk_ethernet_packet_t *packet, void *state);
+static int barrier_recv_callback(nk_net_dev_status_t status, nk_ethernet_packet_t *packet, void *state);
+static void ring_recv_callback(nk_net_dev_status_t status, nk_ethernet_packet_t *packet, void *state);
+
+// return the rank of node
+int nk_net_ethernet_collective_rank(struct nk_net_ethernet_collective *col, uint32_t* rank);
+
+// scatter the data sent by root
+int nk_net_ethernet_collective_scatter(void *send_data,
+	uint64_t send_count, 
+    uint32_t data_size,
+    void *recv_data, 
+    uint64_t recv_count,
+    uint32_t root, 
+    struct nk_net_ethernet_collective *col);
+
+// broadcast the data sent by root
+int nk_net_ethernet_collective_bcast(struct nk_net_ethernet_collective *col, uint32_t root, void *data, uint64_t data_len);
+
 // barrier the collective
 int nk_net_ethernet_collective_barrier(struct nk_net_ethernet_collective *col);
 
