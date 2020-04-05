@@ -244,7 +244,14 @@ static int launch_vmm_environment()
 }
 
 
-
+char * script [] = {
+    "collnet agent 4",
+    "collnet barrier",
+    "collnet bcast 1",
+    "collnet scatter 1",
+    "collnet gather 1",	
+    0
+};
 #define NAUT_WELCOME \
 "Welcome to                                         \n" \
 "    _   __               __   _  __                \n" \
@@ -491,7 +498,7 @@ init (unsigned long mbd,
 
     launch_vmm_environment();
 
-    nk_launch_shell("root-shell",0,0,0);
+    nk_launch_shell("root-shell",0,script,0);
 
     runtime_init();
 

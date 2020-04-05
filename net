@@ -1,0 +1,1 @@
+make isoimage && sudo qemu-system-x86_64 -smp 2 -m 2048 -serial file:foo.out -serial stdio -cdrom nautilus.iso -net nic,model=e1000 -net tap,ifname=tap0,script=no

@@ -1378,7 +1378,6 @@ static int handle_col(char *buf)
     int num_nodes;
     int i;
     int signal;
-
 #ifdef NAUT_CONFIG_NET_COLLECTIVE 
     if (sscanf(buf, "collnet agent %d", &num_nodes)==1) {
         handle_net("net agent create coll-test virtio-net0");
@@ -1401,9 +1400,132 @@ static int handle_col(char *buf)
     }
 
     if (strcmp(buf, "collnet barrier")==0) { 
-        nk_net_ethernet_collective_barrier(collnet_agent);
+        nk_vc_printf("--------Start barrier test--------- \n");
+        for(int i = 0; i < 10; i++){
+            nk_vc_printf("start barrier %d\n", i);
+            nk_net_ethernet_collective_barrier(collnet_agent);
+            nk_vc_printf("end of barrier %d\n", i);
+        }
+        nk_vc_printf("--------End barrier test--------- \n");
         return 0;
     }
+
+    int bcast_root;
+    if (sscanf(buf, "collnet bcast %d", &bcast_root)==1){
+        nk_vc_printf("--------Start bcast test--------- \n");
+        uint32_t my_rank;
+        int* data ;
+        nk_net_ethernet_collective_rank(collnet_agent, &my_rank);
+        for(int i = 0; i < 10; i++){   
+            nk_vc_printf("start bcast %d\n", i);  
+            if (my_rank == bcast_root){
+                //data = "Hello world";
+                *data = 100+i;
+                nk_vc_printf("Node %d is broadcasting data: %d\n", my_rank, *data);
+            }
+            nk_net_ethernet_collective_barrier(collnet_agent);
+            nk_net_ethernet_collective_bcast(collnet_agent, bcast_root, data, sizeof(int));
+            //nk_net_ethernet_collective_barrier(collnet_agent);
+            if (my_rank != bcast_root){
+                nk_vc_printf("Node %d received data: %d from node %d.\n", my_rank, *data, bcast_root);
+            }
+
+            nk_vc_printf("end of bcast %d\n", i);
+        }
+        nk_vc_printf("--------End bcast test--------- \n");
+        return 0;
+    }
+    int scatter_root;
+    if (sscanf(buf, "collnet scatter %d", &scatter_root)==1){
+        nk_vc_printf("--------Start scatter test--------- \n");
+        uint32_t my_rank;
+        int send_count = 4;
+        int recv_count = 4;
+        float* send_data;
+        float* recv_data;  
+        send_data = (float*)malloc(sizeof(float)*send_count*num_nodes);
+        recv_data = (float*)malloc(sizeof(float)*recv_count);
+
+        nk_net_ethernet_collective_rank(collnet_agent, &my_rank);
+        for(int i = 0; i < 10; i++){   
+            
+            nk_vc_printf("start scatter %d\n", i);
+            if (my_rank == scatter_root){
+                //send_data = "0123456789abcdef";
+                nk_vc_printf("Node %d is scattering data:", my_rank);
+                //nk_vc_printf("%s",send_data);
+                for (int j=0; j<send_count*num_nodes; j++){
+                     *(send_data+j) = 100.1+j+i; // send data for i: 100 101 102 103 ...
+                     nk_vc_printf(" %.6f", send_data[j]);
+                 }
+                nk_vc_printf("\n");
+            }
+
+            
+            nk_net_ethernet_collective_barrier(collnet_agent);
+            nk_net_ethernet_collective_scatter(send_data, send_count, sizeof(*send_data), recv_data, recv_count, scatter_root, collnet_agent);
+            nk_net_ethernet_collective_barrier(collnet_agent);
+            if (my_rank != scatter_root){
+                nk_vc_printf("Node %d received data from node %d, data :", my_rank, scatter_root);
+                for(int j=0; j<recv_count; j++){
+                    nk_vc_printf(" %.6f", *(recv_data+j));
+                }
+                nk_vc_printf("\n");
+            }
+            nk_vc_printf("end of scatter %d\n", i);
+        }
+        free(send_data);
+        free(recv_data);
+        nk_vc_printf("--------End scatter test--------- \n");
+        return 0;
+    }
+
+    int gather_root;
+    if (sscanf(buf, "collnet gather %d", &gather_root)==1){
+        nk_vc_printf("--------Start Gather test--------- \n");
+        uint32_t my_rank;
+        int send_count = 2;
+        int recv_count = send_count*num_nodes;
+        int* send_data;
+        int* recv_data;  
+        send_data = (int*)malloc(sizeof(int)*send_count);
+        recv_data = (int*)malloc(sizeof(int)*recv_count);
+
+        nk_net_ethernet_collective_rank(collnet_agent, &my_rank);
+        // for(int i = 0; i < 100; i++){   
+            int i;
+            nk_vc_printf("start gather %d\n", i);
+            if (my_rank == gather_root){
+                nk_vc_printf("Node %d is gathering data", my_rank);
+                nk_vc_printf("\n");
+            }
+
+            nk_vc_printf("Node %d has data :", my_rank);
+            for(int j=0; j<send_count; j++){
+                *(send_data+j) = j+my_rank;
+                nk_vc_printf(" %d", *(send_data+j));
+            }
+            nk_vc_printf("\n");
+                        
+            //nk_net_ethernet_collective_barrier(collnet_agent);
+            nk_net_ethernet_collective_gather(send_data, send_count, sizeof(*send_data), recv_data, recv_count, gather_root, collnet_agent);
+            //nk_net_ethernet_collective_barrier(collnet_agent);
+
+            if (my_rank == gather_root){
+                nk_vc_printf("Node %d has gatherred data :", my_rank);
+                for(int j=0; j<recv_count; j++){
+                    nk_vc_printf(" %d", *(recv_data+j));
+                }
+                nk_vc_printf("\n");
+            }
+            nk_vc_printf("end of gather %d\n", i);
+        // }
+        free(send_data);
+        free(recv_data);
+        nk_vc_printf("--------End scatter test--------- \n");
+        return 0;
+    }
+
 #endif
 
     nk_vc_printf("No relevant collective network functionality is configured or bad command\n");

@@ -1,0 +1,1 @@
+#define NAUT_CONFIG_NET_LWIP 1
